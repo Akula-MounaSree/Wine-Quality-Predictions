@@ -11,8 +11,8 @@ st.header("Dataset Overview")
 st.write(df.head(10))
 st.write('Dataset Shape:', df.shape)
 st.write('Dataset Columns:', df.columns)
-st.write('Dataset Description:', df.describe())
-st.write('Missing Values:', df.isnull().sum())
+#st.write('Dataset Description:', df.describe())
+#st.write('Missing Values:', df.isnull().sum())
 #st.header("Wine Quality Distribution")
 #fig, ax = plt.subplots()
 #sns.histplot(df['quality'], bins=10, kde=True, ax=ax)
@@ -60,7 +60,34 @@ input_data_scaled = scaler.transform(input_data)
 if st.button("Predict Quality"):
     prediction = model.predict(input_data_scaled)
     st.subheader("Predicted Wine Quality")
-    st.write(f"⭐ {prediction[0]} ⭐")
+    st.write(f" {prediction[0]} ")
+prediction=model.predict(input_data)[0]
+if prediction<=4:
+    grade='Poor'
+    color='red'
+elif prediction<=6:
+    grade='Average'
+    color='orange'  
+else:    
+    grade='Good'
+    color='green'
+st.markdown(f"""<div style="background-color:{color}; padding: 10px; border-radius: 5px; text-align: center;">
+    <h2 style="color: white; margin: 0;">Predicted Wine Quality: {prediction} ({grade})</h2>
+</div>""", unsafe_allow_html=True)
+import plotly.graph_objects as go
+fig = go.Figure(go.Indicator(
+    mode = "gauge+number",
+    value = prediction,
+    title = {'text': "Wine Quality Score"},
+    gauge = {
+        'axis': {'range': [0, 10]},
+        'bar': {'color': color},
+        'steps' : [
+            {'range': [0, 4], 'color': 'red'},
+            {'range': [4, 6], 'color': 'orange'},
+            {'range': [6, 10], 'color': 'green'}],
+    }))
+st.plotly_chart(fig, use_container_width=True)
 #features=pd.DataFrame({"fixed acidity":[fixed_acidity], "volatile acidity":[Volatile_acidity],"citric acid":[citric_acid],
 #"residual sugar":[residual_sugar],"chlorides":[chlorides],"free sulfur dioxide":[free_sulfur_dioxide],"total sulfur dioxide":[total_sulfur_dioxide],"density":[density],
 #"pH":[pH],"sulphates":[sulphates],"alcohol":[alcohol]})
