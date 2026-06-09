@@ -3,7 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-df=pd.read_csv(r"WineQT.csv")
+@st.cache_data
+def load_data():
+    return pd.read_csv(r"WineQT.csv")
+df=load_data()
 st.title("Wine Quality Analysis")
 st.image("https://redandwhiteshops.com/wp-content/uploads/2025/04/Sweet-Red-Wine-Types-A-Complete-Guide-for-Every-Palate.jpg")
 st.markdown("This is a wine quality analysis app built using Streamlit. It allows users to explore the dataset, visualize relationships between features, and gain insights into the factors that influence wine quality.")
